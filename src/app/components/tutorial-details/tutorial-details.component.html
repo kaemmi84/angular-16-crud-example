@@ -63,13 +63,13 @@
 
     <button
       class="badge badge-primary mr-2"
-      *ngIf="currentTutorial.published"
+      *ngIf="currentTutorial.published === 'public'"
       (click)="updatePublished('draft')"
     >
       UnPublish
     </button>
     <button
-      *ngIf="!currentTutorial.published"
+      *ngIf="currentTutorial.published !== 'public'"
       class="badge badge-primary mr-2"
       (click)="updatePublished('public')"
     >

@@ -1,6 +1,7 @@
+import { Observable, of } from 'rxjs';
+
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+
 import { Tutorial } from '../models/tutorial.model';
 
 const baseUrl = 'http://localhost:8080/api/tutorials';
@@ -9,33 +10,46 @@ const baseUrl = 'http://localhost:8080/api/tutorials';
   providedIn: 'root',
 })
 export class TutorialService {
-  constructor(private http: HttpClient) {}
+  private tutorials: Tutorial[] = [];
 
   getAll(): Observable<Tutorial[]> {
-    return this.http.get<Tutorial[]>(baseUrl);
+    return of(this.tutorials);
   }
 
   get(id: any): Observable<Tutorial> {
-    return this.http.get<Tutorial>(`${baseUrl}/${id}`);
+    const tutorial = this.tutorials.find(t => t.id === +id)!;
+    return of(tutorial);
   }
 
   create(data: any): Observable<any> {
-    return this.http.post(baseUrl, data);
+    const maxId = this.tutorials.length === 0 ? 0 : Math.max(...this.tutorials.map(t => t.id));
+
+    data.id = maxId + 1;
+    this.tutorials.push(data);
+    return of(data);
   }
 
   update(id: any, data: any): Observable<any> {
-    return this.http.put(`${baseUrl}/${id}`, data);
+    const index = this.tutorials.findIndex(t => t.id === +id);
+    if (index !== -1) {
+      this.tutorials[index] = { ...this.tutorials[index], ...data };
+    }
+    return of({ updated: true });
+
   }
 
   delete(id: any): Observable<any> {
-    return this.http.delete(`${baseUrl}/${id}`);
+    this.tutorials = this.tutorials.filter(t => t.id !== +id);
+    return of({ deleted: true });
   }
 
   deleteAll(): Observable<any> {
-    return this.http.delete(baseUrl);
+    this.tutorials = [];
+    return of({ deletedAll: true });
   }
 
   findByTitle(title: any): Observable<Tutorial[]> {
-    return this.http.get<Tutorial[]>(`${baseUrl}?title=${title}`);
+    const filteredTutorials = this.tutorials.filter(t => t.title === title);
+    return of(filteredTutorials);
   }
 }

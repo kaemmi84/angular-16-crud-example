@@ -1,97 +1,123 @@
-<div *ngIf="viewMode; else editable">
-  <div *ngIf="currentTutorial.id">
-    <h4>Tutorial</h4>
-    <div>
-      <label><strong>Title:</strong></label> {{ currentTutorial.title }}
-    </div>
-    <div>
-      <label><strong>Description:</strong></label>
-      {{ currentTutorial.description }}
-    </div>
-    <div>
-      <label><strong>Status:</strong></label>
-      <span [ngSwitch]="currentTutorial.published">
-        <span *ngSwitchCase="'draft'" [ngStyle]="{'background': 'gray'}">Draft</span>
-        <span *ngSwitchCase="'reviewed'" [ngStyle]="{'background': 'orange'}">Reviewed</span>
-        <span *ngSwitchCase="'public'" [ngStyle]="{'background': 'green'}">Published</span>
-        <span *ngSwitchDefault>Not set</span>
-      </span>
-    </div>
-
-    <a class="badge badge-warning"
-      routerLink="/tutorials/{{ currentTutorial.id }}">
-      Edit
-    </a>
+@if (viewMode) {
+<div>
+@if (currentTutorial.id) {
+<div>
+  <h4>Tutorial</h4>
+  <div>
+    <label><strong>Title:</strong></label> {{ currentTutorial.title }}
+  </div>
+  <div>
+    <label><strong>Description:</strong></label>
+    {{ currentTutorial.description }}
+  </div>
+  <div>
+    <label><strong>Status:</strong></label>
+    <span>
+@switch (currentTutorial.published) {
+      @case ('draft') {
+  <span [ngStyle]="{'background': 'gray'}">Draft</span>
+}
+        @case ('reviewed') {
+  <span [ngStyle]="{'background': 'orange'}">Reviewed</span>
+}
+        @case ('public') {
+  <span [ngStyle]="{'background': 'green'}">Published</span>
+}
+        @default {
+  <span>Not set</span>
+}
+      }
+</span>
   </div>
 
-  <div *ngIf="!currentTutorial">
-    <br />
-    <p>Please click on a Tutorial...</p>
-  </div>
+  <a class="badge badge-warning"
+     routerLink="/tutorials/{{ currentTutorial.id }}">
+    Edit
+  </a>
 </div>
+}
 
-<ng-template #editable>
-  <div *ngIf="currentTutorial.id" class="edit-form">
-    <h4>Tutorial</h4>
-    <form>
-      <div class="form-group">
-        <label for="title">Title</label>
-        <input
-          type="text"
-          class="form-control"
-          id="title"
-          [(ngModel)]="currentTutorial.title"
-          name="title"
-        />
-      </div>
-      <div class="form-group">
-        <label for="description">Description</label>
-        <input
-          type="text"
-          class="form-control"
-          id="description"
-          [(ngModel)]="currentTutorial.description"
-          name="description"
-        />
-      </div>
+@if (!currentTutorial) {
+<div>
+  <br/>
+  <p>Please click on a Tutorial...</p>
+</div>
+}
+</div>
+} @else {
 
-      <div class="form-group">
-        <label><strong>Status:</strong></label>
-        {{ currentTutorial.published ? "Published" : "Pending" }}
-      </div>
-    </form>
+@if (currentTutorial.id) {
+<div class="edit-form">
+  <h4>Tutorial</h4>
+  <form>
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input
+        type="text"
+        class="form-control"
+        id="title"
+        [(ngModel)]="currentTutorial.title"
+        name="title"
+      />
+    </div>
+    <div class="form-group">
+      <label for="description">Description</label>
+      <input
+        type="text"
+        class="form-control"
+        id="description"
+        [(ngModel)]="currentTutorial.description"
+        name="description"
+      />
+    </div>
 
-    <button
-      class="badge badge-primary mr-2"
-      *ngIf="currentTutorial.published === 'public'"
-      (click)="updatePublished('draft')"
-    >
-      UnPublish
-    </button>
-    <button
-      *ngIf="currentTutorial.published !== 'public'"
-      class="badge badge-primary mr-2"
-      (click)="updatePublished('public')"
-    >
-      Publish
-    </button>
+    <div class="form-group">
+      <label><strong>Status:</strong></label>
+      {{ currentTutorial.published ? "Published" : "Pending" }}
+    </div>
+  </form>
 
-    <button class="badge badge-danger mr-2" (click)="deleteTutorial()">
-      Delete
-    </button>
+  @if (currentTutorial.published === 'public') {
+  <button
+        class="badge badge-primary mr-2"
 
-    <button
-      type="submit"
-      class="badge badge-success mb-2"
-      (click)="updateTutorial()"
-    >
-      Update
-    </button>
-    <p>{{ message }}</p>
-  </div>
+        (click)="updatePublished('draft')"
+      >
+        UnPublish
+      </button>
+  }
+  @if (currentTutorial.published !== 'public') {
+  <button
 
-  <div *ngIf="!currentTutorial.id">
-    <br />
-    <p>Cannot access this Tutorial...</p>
-  </div>
-</ng-template>
+        class="badge badge-primary mr-2"
+        (click)="updatePublished('public')"
+      >
+        Publish
+      </button>
+  }
+
+  <button class="badge badge-danger mr-2" (click)="deleteTutorial()">
+    Delete
+  </button>
+
+  <button
+    type="submit"
+    class="badge badge-success mb-2"
+    (click)="updateTutorial()"
+  >
+    Update
+  </button>
+  <p>{{ message }}</p>
+</div>
+}
+
+@if (!currentTutorial.id) {
+<div>
+  <br/>
+  <p>Cannot access this Tutorial...</p>
+</div>
+}
+
+  }
+
+

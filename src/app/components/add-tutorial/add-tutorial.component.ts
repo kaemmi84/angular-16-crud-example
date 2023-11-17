@@ -18,9 +18,10 @@ export class AddTutorialComponent {
   constructor(private tutorialService: TutorialService) {}
 
   saveTutorial(): void {
-    const data = {
+    const data: Tutorial = {
       title: this.tutorial.title,
-      description: this.tutorial.description
+      description: this.tutorial.description,
+      published: 'draft'
     };
 
     this.tutorialService.create(data).subscribe({

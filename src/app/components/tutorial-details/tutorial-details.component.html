@@ -10,6 +10,12 @@
     </div>
     <div>
       <label><strong>Status:</strong></label>
+      <span [ngSwitch]="currentTutorial.published">
+        <span *ngSwitchCase="'draft'" [ngStyle]="{'background': 'gray'}">Draft</span>
+        <span *ngSwitchCase="'reviewed'" [ngStyle]="{'background': 'orange'}">Reviewed</span>
+        <span *ngSwitchCase="'public'" [ngStyle]="{'background': 'green'}">Published</span>
+        <span *ngSwitchDefault>Not set</span>
+      </span>
       {{ currentTutorial.published ? "Published" : "Pending" }}
     </div>
 
@@ -59,14 +65,14 @@
     <button
       class="badge badge-primary mr-2"
       *ngIf="currentTutorial.published"
-      (click)="updatePublished(false)"
+      (click)="updatePublished('draft')"
     >
       UnPublish
     </button>
     <button
       *ngIf="!currentTutorial.published"
       class="badge badge-primary mr-2"
-      (click)="updatePublished(true)"
+      (click)="updatePublished('public')"
     >
       Publish
     </button>

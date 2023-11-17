@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { TutorialService } from 'src/app/services/tutorial.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Tutorial } from 'src/app/models/tutorial.model';
+import {Component, Input} from '@angular/core';
+import {TutorialService} from 'src/app/services/tutorial.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Tutorial} from 'src/app/models/tutorial.model';
 
 @Component({
   selector: 'app-tutorial-details',
@@ -14,7 +14,7 @@ export class TutorialDetailsComponent {
   @Input() currentTutorial: Tutorial = {
     title: '',
     description: '',
-    published: false
+    published: 'draft'
   };
 
   message = '';
@@ -42,7 +42,7 @@ export class TutorialDetailsComponent {
     });
   }
 
-  updatePublished(status: boolean): void {
+  updatePublished(status: 'draft' | 'reviewed' | 'public'): void {
     const data = {
       title: this.currentTutorial.title,
       description: this.currentTutorial.description,

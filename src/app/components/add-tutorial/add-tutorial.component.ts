@@ -11,7 +11,7 @@ export class AddTutorialComponent {
   tutorial: Tutorial = {
     title: '',
     description: '',
-    published: false
+    published: 'draft'
   };
   submitted = false;
 
@@ -37,7 +37,7 @@ export class AddTutorialComponent {
     this.tutorial = {
       title: '',
       description: '',
-      published: false
+      published: 'draft'
     };
   }
 }
